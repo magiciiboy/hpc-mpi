@@ -1,5 +1,5 @@
 echo "Blocking"
-mpicc ping_pong_blocking.c -o Blocking
+mpicc ping_pong_blocking.c -o blocking
 mpirun -np 56 ./Blocking
 
 echo "Non Blocking"
