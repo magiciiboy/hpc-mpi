@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <string.h>
-#define N 100000 //100000000 chars ~= 100MB
+#define N 10000 //100000000 chars ~= 100MB
 
 int main(int argc, char* argv[]) {
   int i,count=0,len;

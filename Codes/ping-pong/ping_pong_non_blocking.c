@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <string.h>
-#define N 100000
+#define N 10000
 
 int main(int argc, char* argv[]) {
   int i,count=0;
