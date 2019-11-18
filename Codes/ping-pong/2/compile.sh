@@ -1,3 +1,9 @@
+# Load module
+module load gcc
+module load intel
+module load mpi
+
+# Compile
 echo "Compiling 1B"
 mpicc ping_pong_blocking.c -DSIZE1 -o blocking_SIZE1
 mpicc ping_pong_non_blocking.c -DSIZE1 -o non_blocking_SIZE1
