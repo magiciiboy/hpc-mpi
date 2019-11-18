@@ -16,6 +16,6 @@ mpicc exercise3_32ranks.c -o ex3_32
 mpirun -np 32 ex3_32
 echo "-----------------------------------------"
 echo "Run for 64 procs"
-mpicc exercise3_64ranks.c -o ex3_64
-mpirun -np 64 ex3_64
+mpicc exercise3_56ranks.c -o ex3_56
+mpirun -np 56 ex3_56
 echo "-----------------------------------------"
