@@ -1,6 +1,6 @@
 SIZES=("-DONEMB" "-DTENMB" "-DHUNDREDMB")
 
-for (size in "${SIZES[@]}"); do
+for size in "${SIZES[@]}"; do
     mpicc broadcast.c $size -o broad
     mpicc reduce.c $size -o red
 
