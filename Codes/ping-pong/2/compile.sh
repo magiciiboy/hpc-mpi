@@ -1,3 +1,4 @@
+#!/bin/bash
 # Load module
 module load gcc
 module load intel

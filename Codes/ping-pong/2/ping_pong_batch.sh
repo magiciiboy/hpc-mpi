@@ -5,6 +5,10 @@
 #SBATCH -t 00:01:00
 #SBATCH -o output_2N_2n_1taskPerNode_time1Min_process_pinning_bindByCore_mapByNode
 
+module load mpi
+module load gcc
+module load intel
+
 echo "1B"
 echo "Blocking"
 mpirun -np 2 --bind-to core --map-by node ./blocking_SIZE1
