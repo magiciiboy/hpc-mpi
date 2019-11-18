@@ -3,18 +3,53 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <string.h>
-#define N 1 //100000000 chars ~= 100MB
+
+#ifdef SIZE1
+#define N 1
+#endif
+
+#ifdef SIZE10
+#define N 10
+#endif
+
+#ifdef SIZE100
+#define N 100
+#endif
+
+#ifdef SIZE1000
+#define N 1000
+#endif
+
+#ifdef SIZE10000
+#define N 10000
+#endif
+
+#ifdef SIZE100000
+#define N 100000
+#endif
+
+#ifdef SIZE1000000
+#define N 1000000
+#endif
+
+#ifdef SIZE10000000
+#define N 10000000
+#endif
+
+#ifdef SIZE100000000
+#define N 100000000
+#endif
 
 int main(int argc, char* argv[]) {
-  int i,count=0,len;
+  int i,count=0;
   double start,end;
   char *array = (char*)malloc(sizeof(char)*N);
   char *recv = (char*)malloc(sizeof(char)*N);
-  char response[10]="ping-pong";
- 
+  MPI_Request req1,req2;
+  MPI_Status status;
+  char resp[10]="ping-pong";
   // Initialize the MPI environment
   MPI_Init(NULL, NULL);
-
   // Find out rank, size
   int world_rank;
   int partner_rank[6] = {1,3,7,15,31,55};
@@ -33,22 +68,25 @@ int main(int argc, char* argv[]) {
   }
 
   for(i=0;i<6;i++){
- 
+
     if (world_rank == 0) {
 
       start = MPI_Wtime();
 
-      MPI_Send(array, N, MPI_CHAR, partner_rank[i], 0, MPI_COMM_WORLD);
+      MPI_Isend(array, N, MPI_CHAR, partner_rank[i], 0, MPI_COMM_WORLD,&req1);
 
-      MPI_Recv(response, 10, MPI_CHAR, partner_rank[i] , 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      MPI_Irecv(resp, 10, MPI_CHAR, partner_rank[i] , 0, MPI_COMM_WORLD,&req2);
 
       end = MPI_Wtime();
+
       printf("On process %d, For destination %d, Time = %f sec\n",world_rank+1, partner_rank[i]+1,end-start); 
 
     } else if(world_rank == partner_rank[i]){
-      MPI_Recv(recv, N, MPI_CHAR, 0 , 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      MPI_Irecv(recv, N, MPI_CHAR, 0 , 0, MPI_COMM_WORLD,&req2);
+
       
-      MPI_Send(response, 10, MPI_CHAR, 0, 0, MPI_COMM_WORLD);
+      MPI_Isend(resp, 10, MPI_CHAR, 0, 0, MPI_COMM_WORLD, &req1);
+
     }
   }
   MPI_Finalize();
