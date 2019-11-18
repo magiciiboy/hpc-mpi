@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])  {
 int        rank, new_rank, sendbuf, recvbuf, numtasks,
            ranks1[16]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15},
-           ranks2[16]={16,17,18,19,20,21,22,23,24,25,26,27,28,28,30,31};
+           ranks2[16]={16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};
 
 MPI_Group  orig_group, new_group;
 MPI_Comm   new_comm;
