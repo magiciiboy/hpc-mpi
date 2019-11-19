@@ -7,7 +7,13 @@
 
 echo "Sort SMALL array"
 mpirun -np 4 ./quicksort_parallel_SMALL
+mpirun -np 4 ./quicksort_parallel_SMALL
+mpirun -np 4 ./quicksort_parallel_SMALL
 echo "Sort MEDIUM array"
 mpirun -np 4 ./quicksort_parallel_MEDIUM
+mpirun -np 4 ./quicksort_parallel_MEDIUM
+mpirun -np 4 ./quicksort_parallel_MEDIUM
 echo "Sort LARGE array"
+mpirun -np 4 ./quicksort_parallel_LARGE
+mpirun -np 4 ./quicksort_parallel_LARGE
 mpirun -np 4 ./quicksort_parallel_LARGE
