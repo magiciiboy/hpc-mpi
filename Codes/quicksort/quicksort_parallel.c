@@ -29,27 +29,26 @@ void generate_array (int *input) {
 
 int validate (int *output) {
     int i = 0;
-    int num_elements = N;
     if (output == NULL) {
         printf("Empty array!");
         return -1;
     }
-    for (i = 0; i < num_elements - 1; i++) {
+    for (i = 0; i < N - 1; i++) {
         if (output[i] > output[i + 1]) {
-            printf("************* NOT sorted *************\n");
-            printf("Element [%d]  = %d is greater than [%d] = %d \n", i, output[i], i+1, output[i+1]);
+            printf("Validate: ***NOT sorted***\n");
+            printf("At [%d] = %d > [%d] = %d \n", i, output[i], i+1, output[i+1]);
             return -1;
         }
     }
-    printf ("============= SORTED ===========\n");
+    printf ("Validate: Sorted!\n");
     return 0;
 }
 
 int main (int argc, char **argv)
 {
     int *input = NULL;
-    //int *output = NULL;
-    int num_elements;
+    int *output = NULL;
+    int N;
     int  i = 0;
     int numtasks, rank, rc;
     MPI_Status recv_status;
@@ -67,13 +66,9 @@ int main (int argc, char **argv)
     MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+    printf("Running with rank [%d] and N[%d]\n", rank, N);
 
-    printf("Running with rank : %d\n", rank);
-
-    num_elements = N;
-    printf("Running with rank [%d] and num_elements[%d]\n", rank, num_elements);
-
-    if (!(input = (int *) calloc (num_elements, sizeof (int)))){
+    if (!(input = (int *) calloc (N, sizeof (int)))){
         printf ("Memory error\n");
         exit (EXIT_FAILURE);
     }
@@ -81,8 +76,8 @@ int main (int argc, char **argv)
     if(rank == 0){
         printf("My rank is : %d\n", rank);
         generate_array(input);
-        elems_per_task = (num_elements/numtasks);
-        adjust  = num_elements - elems_per_task*numtasks;
+        elems_per_task = (N/numtasks);
+        adjust  = N - elems_per_task*numtasks;
         if(adjust > 0){
                 part_start = elems_per_task + 1;
                 adjust --;
@@ -94,40 +89,36 @@ int main (int argc, char **argv)
                         MPI_Send((input + part_start), elems_per_task + 1, MPI_INT, i, 0, MPI_COMM_WORLD);
                         part_start += (elems_per_task + 1);
                         adjust -- ;
-                }
-                else{
+                } else {
                         MPI_Send((input + part_start), elems_per_task, MPI_INT, i, 0, MPI_COMM_WORLD);
                         part_start += (elems_per_task);
                 }
         }
-    }
-    else{
+    } else {
         printf("My rank is : %d\n", rank);
-        elems_per_task = (num_elements/numtasks);
-        adjust  = num_elements - elems_per_task*numtasks;
+        elems_per_task = (N/numtasks);
+        adjust  = N - elems_per_task*numtasks;
         part_start = 0;
         for(i=0; i < rank; i++){
                 if(adjust > 0){
                         part_start += (elems_per_task + 1);
                         adjust --;
-                }
-                else{
+                } else {
                         part_start += (elems_per_task);
                 }
         }
                 
         if(adjust > 0){
                 MPI_Recv((input + part_start), elems_per_task+ 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &recv_status);
-        }
-        else{
+        } else {
                 MPI_Recv((input + part_start), elems_per_task, MPI_INT, 0, 0, MPI_COMM_WORLD, &recv_status);
         }
-        for(i = part_start; i < part_start + elems_per_task; i ++){
-                printf("[%d] [%d] = [%d] \n", rank, i, input[i]);
-        }
+        // for(i = part_start; i < part_start + elems_per_task; i ++){
+        //         printf("[%d] [%d] = [%d] \n", rank, i, input[i]);
+        // }
     }
     MPI_Finalize();
 
-    /* if(validate (output, num_elements) != 0) return EXIT_FAILURE; */
+    /* if(validate (output) != 0) return EXIT_FAILURE; */
     return EXIT_SUCCESS;
 }

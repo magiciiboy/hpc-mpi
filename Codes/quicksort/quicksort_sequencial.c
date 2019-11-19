@@ -26,19 +26,18 @@ void generate_array (int *input) {
 
 int validate (int *output) {
     int i = 0;
-    int num_elements = N;
     if (output == NULL) {
         printf("Empty array!");
         return -1;
     }
-    for (i = 0; i < num_elements - 1; i++) {
+    for (i = 0; i < N - 1; i++) {
         if (output[i] > output[i + 1]) {
-            printf("************* NOT sorted *************\n");
-            printf("Element [%d]  = %d is greater than [%d] = %d \n", i, output[i], i+1, output[i+1]);
+            printf("Validate: ***NOT sorted***\n");
+            printf("At [%d] = %d > [%d] = %d \n", i, output[i], i+1, output[i+1]);
             return -1;
         }
     }
-    printf ("============= SORTED ===========\n");
+    printf ("Validate: Sorted!\n");
     return 0;
 }
 
