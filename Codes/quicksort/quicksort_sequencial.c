@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/time.h> 
 // #define N 100
 
 #ifdef SMALL
@@ -6,11 +8,11 @@
 #endif
 
 #ifdef MEDIUM
-#define N 10000
+#define N 100000
 #endif
 
 #ifdef LARGE
-#define N 1000000
+#define N 100000000
 #endif
 
 void generate_array (int *input) {
@@ -57,9 +59,17 @@ void quicksort(int *target, int left, int right) {
 
 int main() {
     int i;
-    int *array = malloc(30 * sizeof(int));
-    int num = N;
+    int *array = malloc(N * sizeof(int));
+    struct timeval start, stop;
+    double secs;
+
     generate_array(array);
+    
+    gettimeofday(&start, NULL);
     quicksort(array, 0, N-1);
+    gettimeofday(&stop, NULL);
+
+    secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
+    printf("Time: %f\n", secs);
     return validate(array);
 }

@@ -11,30 +11,32 @@
 #endif
 
 #ifdef MEDIUM
-#define N 10000
+#define N 100000
 #endif
 
 #ifdef LARGE
-#define N 1000000
+#define N 100000000
 #endif
 
-int* generate_array () {
-    int *input = NULL;
-    srand(43);
-    for(i = 0; i < N ;i++){
+void generate_array (int *input) {
+    unsigned int timeval = 0;
+    srand(timeval);
+    for(int i = 0; i < N ;i++){
         // input[i] = i;
-        input[i] = rand()%1000000;
+        input[i] = rand() % 1000000;
     }
-    return input;
 }
 
-int validate (int *output, int num_elements)
-{
+int validate (int *output) {
     int i = 0;
-    assert (output != NULL);
+    int num_elements = N;
+    if (output == NULL) {
+        printf("Empty array!");
+        return -1;
+    }
     for (i = 0; i < num_elements - 1; i++) {
         if (output[i] > output[i + 1]) {
-            printf ("************* NOT sorted *************\n");
+            printf("************* NOT sorted *************\n");
             printf("Element [%d]  = %d is greater than [%d] = %d \n", i, output[i], i+1, output[i+1]);
             return -1;
         }
@@ -67,11 +69,8 @@ int main (int argc, char **argv)
 
 
     printf("Running with rank : %d\n", rank);
-    if( argc == 3){
-        timeval = (unsigned int)atof(argv[3]);
-    }
 
-    num_elements = atoi (argv[1]);
+    num_elements = N;
     printf("Running with rank [%d] and num_elements[%d]\n", rank, num_elements);
 
     if (!(input = (int *) calloc (num_elements, sizeof (int)))){
@@ -80,15 +79,14 @@ int main (int argc, char **argv)
     }
 
     if(rank == 0){
-        
-        input = generate_array();
+        printf("My rank is : %d\n", rank);
+        generate_array(input);
         elems_per_task = (num_elements/numtasks);
         adjust  = num_elements - elems_per_task*numtasks;
         if(adjust > 0){
                 part_start = elems_per_task + 1;
                 adjust --;
-        }
-        else{
+        } else {
                 part_start = elems_per_task;
         }
         for(i = 1; i < numtasks; i++){
