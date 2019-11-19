@@ -19,8 +19,9 @@
 
 void generate_array (int *input) {
     unsigned int timeval = 0;
+    int i = 0;
     srand(timeval);
-    for(int i = 0; i < N ;i++){
+    for(i = 0; i < N ;i++){
         // input[i] = i;
         input[i] = rand() % 1000000;
     }
