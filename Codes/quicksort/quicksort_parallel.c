@@ -3,8 +3,6 @@
 #include <mpi.h>
 #include <time.h>
 
-#define N 100
-
 #ifdef SMALL
 #define N 100
 #endif
