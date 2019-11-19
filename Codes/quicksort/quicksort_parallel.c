@@ -4,6 +4,29 @@
 #include <mpi.h>
 #include <time.h>
 
+#define N 100
+
+#ifdef SMALL
+#define N 100
+#endif
+
+#ifdef MEDIUM
+#define N 10000
+#endif
+
+#ifdef LARGE
+#define N 1000000
+#endif
+
+int* generate_array () {
+    int *input = NULL;
+    srand(43);
+    for(i = 0; i < N ;i++){
+        // input[i] = i;
+        input[i] = rand()%1000000;
+    }
+    return input;
+}
 
 int validate (int *output, int num_elements)
 {
@@ -27,7 +50,6 @@ int main (int argc, char **argv)
     int num_elements;
     int  i = 0;
     int numtasks, rank, rc;
-    unsigned int timeval = 0;
     MPI_Status recv_status;
 
     int elems_per_task;
@@ -45,9 +67,6 @@ int main (int argc, char **argv)
 
 
     printf("Running with rank : %d\n", rank);
-    if (argc < 2){
-        printf ("Usage: ./pqsort <num of elements>\n");
-    }
     if( argc == 3){
         timeval = (unsigned int)atof(argv[3]);
     }
@@ -61,15 +80,8 @@ int main (int argc, char **argv)
     }
 
     if(rank == 0){
-        if(timeval == 0){
-                timeval = time ( NULL );
-        }
-        printf("The seed is : %d\n", timeval);
-        srand(timeval);
-        for(i = 0; i < num_elements ;i++){
-                input[i] = i;
-                //input[i] = rand()%1000000;
-        }
+        
+        input = generate_array();
         elems_per_task = (num_elements/numtasks);
         adjust  = num_elements - elems_per_task*numtasks;
         if(adjust > 0){
